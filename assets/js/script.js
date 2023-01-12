@@ -113,15 +113,5 @@ $(function () {
   // saves the text and hour section id to local storage
   function save(id, text) {
     localStorage.setItem(id, text);
-
-    // adds brief popup confirming item saved
-    const popup = document.createElement('p');
-    const header = document.querySelector('header');
-    popup.textContent = 'Task saved to local storage';
-    header.appendChild(popup);
-
-    setTimeout(() => {
-      header.removeChild(popup);
-    }, 1000);
   }
 });
