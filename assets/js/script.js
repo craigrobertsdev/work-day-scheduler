@@ -1,18 +1,11 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
 $(function () {
   // get all hour container divs
   const hourSections = $('div.container-lg > div');
+
+  getLocalStorage();
   // Displays the date at the top of the page
   displayDate();
   setHourColours();
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
 
   // add event listeners to each hour container
   for (section of hourSections) {
@@ -21,11 +14,14 @@ $(function () {
 
   // updates colours then sets timer to change as hour changes
   function setHourColours() {
+    // works out how long until the hour is over
     const nextHour = dayjs().startOf('h').add(1, 'hour');
     const diff = nextHour.diff(dayjs());
     updateColours();
+    // start a countdown until the hour ends. when it does, update the colours and reset the countdown for 1 hour
     setTimeout(() => {
       updateColours();
+      // this is the number of milliseconds in an hour
       diff = 3600000;
       setTimeout(updateColours, diff);
     }, diff);
@@ -46,64 +42,86 @@ $(function () {
       }
     }
   }
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-});
 
-// displays the current date in the header section
-// this function updates the date only when the day changes. Done in this way to save on having to process the entire function every second
-function displayDate() {
-  const startOfTomorrow = dayjs().startOf('d').add(24, 'hour');
+  // loads stored tasks from localStorage
+  function getLocalStorage() {
+    for (section of hourSections) {
+      let val = localStorage.getItem($(section).attr('id'));
+      if (val) {
+        // set the hourSection text content based on anything found in local storage
+        $(section).children('textarea').val(val);
+      }
+    }
+  }
 
-  // determine how long until tomorrow
-  let diff = startOfTomorrow.diff(dayjs());
+  // displays the current date in the header section
+  // this function updates the date only when the day changes. Done in this way to save on having to process the entire function every second
+  function displayDate() {
+    const startOfTomorrow = dayjs().startOf('d').add(24, 'hour');
 
-  // display current date
-  displayDay();
+    // determine how long until tomorrow
+    let diff = startOfTomorrow.diff(dayjs());
 
-  // set timeout to run every 24 hours from then on
-  setTimeout(function () {
+    // display current date to header
     displayDay();
-    // number of milliseconds in a day
-    let diff = 86400000;
-    setTimeout(displayDay, diff);
-  }, diff);
-}
 
-function displayDay() {
-  const suffix = ordinalSuffixOf(dayjs().date());
-  const currentDate = dayjs().format('dddd, MMMM D');
-  $('#currentDay').text(currentDate + '' + suffix);
-}
-
-// determines which ordinal suffix to return based on the date provided
-function ordinalSuffixOf(i) {
-  const j = i % 10,
-    k = i % 100;
-  if (j == 1 && k != 11) {
-    return 'st';
+    // set timeout to run every 24 hours from then on
+    setTimeout(function () {
+      displayDay();
+      // number of milliseconds in a day
+      let diff = 86400000;
+      setTimeout(displayDay, diff);
+    }, diff);
   }
-  if (j == 2 && k != 12) {
-    return 'nd';
+
+  // appends the current date to the header section
+  function displayDay() {
+    const suffix = ordinalSuffixOf(dayjs().date());
+    const currentDate = dayjs().format('dddd, MMMM D');
+    $('#currentDay').text(currentDate + '' + suffix);
   }
-  if (j == 3 && k != 13) {
-    return 'rd';
+
+  // determines which ordinal suffix to return based on the date provided
+  function ordinalSuffixOf(i) {
+    // i determines the last digit of the number
+    const j = i % 10,
+      // k deals with the numbers 11, 12 and 13 as they don't follow the ordinal conventions like all other numbers
+      k = i % 100;
+    if (j == 1 && k != 11) {
+      return 'st';
+    }
+    if (j == 2 && k != 12) {
+      return 'nd';
+    }
+    if (j == 3 && k != 13) {
+      return 'rd';
+    }
+    return 'th';
   }
-  return 'th';
-}
 
-function handleSave(event) {
-  event.preventDefault();
-  const textarea = $(this).siblings('textarea')[0];
-  const text = $(textarea).val();
-  const id = $(this).parent('div.time-block').attr('id');
+  // called whenever an hour section is saved
+  function handleSave(event) {
+    event.preventDefault();
+    // gets the text area associated with the save button
+    const textarea = $(this).siblings('textarea')[0];
+    const text = $(textarea).val();
+    const id = $(this).parent('div.time-block').attr('id');
 
-  save(id, text);
-}
+    save(id, text);
+  }
 
-function save(id, text) {
-  console.log('calling save' + id + ' ' + text);
-  localStorage.setItem(id, text);
-}
+  // saves the text and hour section id to local storage
+  function save(id, text) {
+    localStorage.setItem(id, text);
+
+    // adds brief popup confirming item saved
+    const popup = document.createElement('p');
+    const header = document.querySelector('header');
+    popup.textContent = 'Task saved to local storage';
+    header.appendChild(popup);
+
+    setTimeout(() => {
+      header.removeChild(popup);
+    }, 1000);
+  }
+});
