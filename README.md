@@ -1,28 +1,46 @@
 # Work Day Scheduler
 
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Table of Contents
 
-- [Motivation](#motivation)
-- [Problem Solved](#problem-solved)
-- [What I Learned](#what-i-learned)
-- [Site Access](#site-access)
+- [Description](#description)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [Questions](#questions)
+- [License](#license)
 
-<br>
-<p align="center">
-  <img alt="Work Day Scheduler" src="https://github.com/craigrobertsdev/work-day-scheduler/blob/main/screenshot.jpg">
-</p>
+## Description
 
+A simple day planner that persists data to your browser for keeping track of your commitments for the day.
 
-## Motivation
+## Installation
 
-This project was motivated by my need to keep track of my tasks during my work day.
+No dependencies are required to use this page.
 
-## Problem Solved
+## Usage
 
-This app tracks my day-to-day tasks and stores them locally so I can return to it at any time to check what else I have to do. 
+This project is deployed using GitHub Pages [here](https://craigrobertsdev.github.io/work-day-scheduler/).
 
-## What I Learned
-As a result of this project, I have learned how to use third party APIs including JQuery and DayJs. The use of these libraries has significantly cut down on the amount of code required to make this app function.
+The first time the page loads, you will be presented with empty hour slots for a typical 9-5 work day. Depending on the time of day you're on the page, the slots will be green if they are in the future, red if it is the current hour and grey if the time has passed.
 
-## Site Access
-This site was built using Github Pages and can be found [here](https://craigrobertsdev.github.io/work-day-scheduler/)
+Enter events into the planner and click the save button to store them in your browser's storage for future use.
+
+  <p align="center">
+  <img src="https://github.com/craigrobertsdev/work-day-scheduler/raw/main/screenshot.jpg">
+  </p>
+
+## Contributing
+
+If you wish to contribute, please fork the repo and submit a pull request for review.
+
+## Questions
+
+View my other projects at [https://github.com/craigrobertsdev/](https://github.com/craigrobertsdev/).
+
+If you would lke to contact me, I can be reached at [craig.roberts11@outlook.com](mailto:craig.roberts11@outlook.com).
+
+## License
+
+This project is licensed under the MIT license. See [here](https://opensource.org/licenses/MIT) for more info.
